@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>№4 зертханалық жұмыс — Ом заңы</title>
+
+<style>
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f3f6fb;
+    margin:0;
+    color:#172033;
+}
+
+.container{
+    max-width:1050px;
+    margin:25px auto;
+    background:white;
+    padding:30px;
+    border-radius:18px;
+    box-shadow:0 8px 30px #0001;
+}
+
+h1{
+    text-align:center;
+    color:#173b73;
+}
+
+.subtitle{
+    text-align:center;
+    color:#5d687b;
+}
+
+.card{
+    background:#f7f9fc;
+    border:1px solid #dde4ef;
+    border-radius:14px;
+    padding:20px;
+    margin:18px 0;
+}
+
+.controls{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+}
+
+label{
+    font-weight:bold;
+    display:block;
+    margin-bottom:8px;
+}
+
+input[type=range]{
+    width:100%;
+    accent-color:#1769aa;
+}
+
+.value{
+    font-size:25px;
+    font-weight:bold;
+    color:#1769aa;
+}
+
+.results{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:20px;
+}
+
+.result{
+    background:white;
+    border-radius:12px;
+    padding:18px;
+    text-align:center;
+    border:1px solid #dde4ef;
+}
+
+.result b{
+    display:block;
+    font-size:30px;
+    color:#173b73;
+    margin-top:5px;
+}
+
+
+/* =========================
+   ЭЛЕКТР ТІЗБЕГІ
+========================= */
+
+.circuit-box{
+    background:white;
+    border:1px solid #dde4ef;
+    border-radius:14px;
+    padding:10px;
+    margin-top:20px;
+}
+
+#circuit{
+    width:100%;
+    display:block;
+}
+
+.wire{
+    fill:none;
+    stroke:#303c4d;
+    stroke-width:7;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+
+/* =========================
+   ТОКТЫҢ ҚОЗҒАЛЫСЫ
+========================= */
+
+.current-flow{
+    fill:none;
+    stroke:#19a7ff;
+    stroke-width:5;
+    stroke-linecap:round;
+    stroke-dasharray:3 20;
+
+    animation:
+        currentMove
+        0.8s
+        linear
+        infinite;
+}
+
+.current-off{
+    animation-play-state:paused;
+    opacity:0.1;
+}
+
+@keyframes currentMove{
+
+    from{
+        stroke-dashoffset:0;
+    }
+
+    to{
+        stroke-dashoffset:-46;
+    }
+
+}
+
+
+/* =========================
+   ҚҰРАЛДАР
+========================= */
+
+.component{
+    fill:white;
+    stroke:#303c4d;
+    stroke-width:4;
+}
+
+.component-text{
+    font-size:22px;
+    font-weight:bold;
+    fill:#172033;
+}
+
+.label{
+    font-size:18px;
+    font-weight:bold;
+    fill:#172033;
+}
+
+.small-label{
+    font-size:15px;
+    fill:#566579;
+}
+
+
+/* =========================
+   ПОЛЮСТАР
+========================= */
+
+.plus{
+    fill:#d62828;
+    font-size:28px;
+    font-weight:bold;
+}
+
+.minus{
+    fill:#1769aa;
+    font-size:28px;
+    font-weight:bold;
+}
+
+
+/* =========================
+   ТОК БАҒЫТЫ
+========================= */
+
+.arrow{
+    fill:#19a7ff;
+    font-size:24px;
+    font-weight:bold;
+}
+
+
+/* =========================
+   БАТЫРМАЛАР
+========================= */
+
+button{
+    padding:11px 18px;
+    border:0;
+    border-radius:9px;
+    background:#1769aa;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    margin:5px;
+}
+
+button:hover{
+    background:#0e548a;
+}
+
+button.secondary{
+    background:#e3ebf5;
+    color:#183453;
+}
+
+
+/* =========================
+   ГРАФИК
+========================= */
+
+canvas{
+    width:100%;
+    max-height:360px;
+    border:1px solid #dde4ef;
+    border-radius:10px;
+    background:#fff;
+    margin-top:20px;
+}
+
+
+/* =========================
+   КЕСТЕ
+========================= */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th,
+td{
+    border:1px solid #cfd7e5;
+    padding:9px;
+    text-align:center;
+}
+
+th{
+    background:#eaf1fb;
+}
+
+
+.info{
+    padding:12px;
+    background:#eaf5ff;
+    border-left:5px solid #1769aa;
+    border-radius:6px;
+    margin-top:15px;
+}
+
+
+@media(max-width:700px){
+
+    .controls,
+    .results{
+        grid-template-columns:1fr;
+    }
+
+    .container{
+        margin:0;
+        border-radius:0;
+        padding:15px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+<h1>№4 зертханалық жұмыс</h1>
+
+<p class="subtitle">
+<b>
+Тізбек бөлігі үшін ток күшінің кернеуге және кедергіге тәуелділігін зерттеу
+</b>
+</p>
+
+
+<!-- =========================
+     ЗЕРТТЕУ СҰРАҒЫ
+========================= -->
+
+<div class="card">
+
+<h2>1. Зерттеу сұрағы</h2>
+
+<p>
+Кернеу мен кедергінің өзгеруі тізбек бөлігіндегі
+ток күшіне қалай әсер етеді?
+</p>
+
+<h2>2. Мақсат</h2>
+
+<p>
+Ом заңын тәжірибе және интерактивті модель арқылы тексеру:
+<b>I = U / R</b>.
+</p>
+
+</div>
+
+
+
+<!-- =========================
+     ИНТЕРАКТИВТІ МОДЕЛЬ
+========================= -->
+
+<div class="card">
+
+<h2>3. Интерактивті модель</h2>
+
+
+<div class="controls">
+
+
+<!-- КЕРНЕУ -->
+
+<div>
+
+<label>
+
+Кернеу U:
+
+<span
+id="uText"
+class="value">
+12.0 В
+</span>
+
+</label>
+
+<input
+id="u"
+type="range"
+min="0"
+max="24"
+step="0.5"
+value="12"
+>
+
+</div>
+
+
+<!-- КЕДЕРГІ -->
+
+<div>
+
+<label>
+
+Кедергі R:
+
+<span
+id="rText"
+class="value">
+10.0 Ом
+</span>
+
+</label>
+
+<input
+id="r"
+type="range"
+min="1"
+max="30"
+step="0.5"
+value="10"
+>
+
+</div>
+
+</div>
+
+
+
+<!-- НӘТИЖЕЛЕР -->
+
+<div class="results">
+
+<div class="result">
+
+Кернеу U
+
+<b id="uRes">
+12.0 В
+</b>
+
+</div>
+
+
+<div class="result">
+
+Кедергі R
+
+<b id="rRes">
+10.0 Ом
+</b>
+
+</div>
+
+
+<div class="result">
+
+Ток I
+
+<b id="iRes">
+1.200 А
+</b>
+
+</div>
+
+</div>
+
+
+
+<!-- =========================
+     ЭЛЕКТР СЫЗБАСЫ
+========================= -->
+
+<div class="circuit-box">
+
+<h3 style="text-align:center">
+Электр тізбегінің сызбасы
+</h3>
+
+
+<svg
+id="circuit"
+viewBox="0 0 900 500"
+>
+
+
+<!-- =====================
+     НЕГІЗГІ СЫМ
+===================== -->
+
+<path
+class="wire"
+d="
+M150 150
+H300
+
+M380 150
+H700
+V350
+H150
+V230
+"
+/>
+
+
+
+<!-- =====================
+     ТОКТЫҢ ҚОЗҒАЛЫСЫ
+===================== -->
+
+<path
+id="currentFlow"
+class="current-flow"
+d="
+M150 150
+H700
+V350
+H150
+V150
+"
+/>
+
+
+
+<!-- =====================
+     ТОК КӨЗІ
+===================== -->
+
+<line
+x1="115"
+y1="165"
+x2="185"
+y2="165"
+stroke="#303c4d"
+stroke-width="6"
+/>
+
+<line
+x1="130"
+y1="215"
+x2="170"
+y2="215"
+stroke="#303c4d"
+stroke-width="6"
+/>
+
+
+<text
+x="190"
+y="173"
+class="plus">
++
+</text>
+
+
+<text
+x="180"
+y="225"
+class="minus">
+−
+</text>
+
+
+<text
+x="70"
+y="280"
+class="label">
+Ток көзі
+</text>
+
+
+<text
+x="70"
+y="305"
+class="small-label"
+id="batteryValue">
+U = 12 В
+</text>
+
+
+
+<!-- =====================
+     ҚОСҚЫШ
+===================== -->
+
+<circle
+cx="300"
+cy="150"
+r="7"
+fill="white"
+stroke="#303c4d"
+stroke-width="4"
+/>
+
+
+<circle
+cx="380"
+cy="150"
+r="7"
+fill="white"
+stroke="#303c4d"
+stroke-width="4"
+/>
+
+
+<!--
+    Кілттің қозғалмалы бөлігі.
+    Бастапқыда көлденең орналасқан,
+    яғни кілт ЖАБЫҚ.
+-->
+
+<line
+id="switchLever"
+x1="300"
+y1="150"
+x2="380"
+y2="150"
+stroke="#303c4d"
+stroke-width="5"
+stroke-linecap="round"
+/>
+
+
+<text
+x="305"
+y="110"
+class="label">
+Қосқыш
+</text>
+
+
+<text
+id="switchState"
+x="315"
+y="180"
+class="small-label">
+ЖАБЫҚ
+</text>
+
+
+
+<!-- =====================
+     АМПЕРМЕТР
+===================== -->
+
+<circle
+cx="520"
+cy="150"
+r="35"
+class="component"
+/>
+
+
+<text
+x="510"
+y="158"
+class="component-text">
+A
+</text>
+
+
+<text
+x="475"
+y="95"
+class="small-label">
+Амперметр
+</text>
+
+
+
+<!-- =====================
+     РЕЗИСТОР
+===================== -->
+
+<rect
+x="665"
+y="270"
+width="75"
+height="70"
+rx="5"
+class="component"
+/>
+
+
+<text
+x="692"
+y="316"
+class="component-text">
+R
+</text>
+
+
+<text
+x="755"
+y="310"
+class="small-label"
+id="resistorValue">
+10 Ом
+</text>
+
+
+
+<!-- =====================
+     ТОК БАҒЫТЫ
+===================== -->
+
+<text
+x="215"
+y="140"
+class="arrow">
+→ I
+</text>
+
+
+<text
+x="715"
+y="250"
+class="arrow">
+↓
+</text>
+
+
+<text
+x="400"
+y="385"
+class="arrow">
+← I
+</text>
+
+
+
+<!-- =====================
+     ТОК МӘНІ
+===================== -->
+
+<text
+x="350"
+y="430"
+class="label"
+id="currentValue">
+
+I = 1.200 А
+
+</text>
+
+
+<text
+x="300"
+y="460"
+class="small-label">
+
+Көк қозғалыс — токтың жүруін көрсетеді
+
+</text>
+
+</svg>
+
+</div>
+
+
+
+<!-- =========================
+     БАТЫРМАЛАР
+========================= -->
+
+<div style="text-align:center">
+
+<button
+onclick="toggleCurrent()"
+id="currentButton">
+
+Токты тоқтату
+
+</button>
+
+
+<button
+onclick="resetModel()"
+class="secondary">
+
+Қалпына келтіру
+
+</button>
+
+</div>
+
+
+<div class="info">
+
+<b>Бақылау:</b>
+
+Кернеуді арттырғанда ток күші артады.
+Кедергіні арттырғанда ток күші азаяды.
+
+«Токты тоқтату» батырмасын басқанда
+кілт ашылады және токтың қозғалысы тоқтайды.
+
+</div>
+
+
+
+<!-- =========================
+     ГРАФИК
+========================= -->
+
+<canvas
+id="graph"
+width="950"
+height="360">
+</canvas>
+
+
+</div>
+
+
+
+<!-- =========================
+     МОДЕЛЬДІК ЕСЕПТЕУЛЕР
+========================= -->
+
+<div class="card">
+
+<h2>4. Модельдік есептеулер</h2>
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>№</th>
+
+<th>U, В</th>
+
+<th>R, Ом</th>
+
+<th>I = U/R, А</th>
+
+</tr>
+
+</thead>
+
+
+<tbody
+id="tableBody">
+</tbody>
+
+</table>
+
+</div>
+
+
+
+<!-- =========================
+     ТӘЖІРИБЕ
+========================= -->
+
+<div class="card">
+
+<h2>5. Тәжірибелік жұмыс реті</h2>
+
+<ol>
+
+<li>
+Тізбекті жинаңыз.
+Амперметрді тізбекке тізбектей,
+вольтметрді резисторға параллель қосыңыз.
+</li>
+
+<li>
+Кедергіні тұрақты ұстап,
+кернеуді өзгертіңіз.
+</li>
+
+<li>
+Әр кернеу үшін ток күшін өлшеңіз.
+</li>
+
+<li>
+Кернеуді тұрақты ұстап,
+кедергіні өзгертіңіз.
+</li>
+
+<li>
+Өлшенген мәндерді модельдік мәндермен салыстырыңыз.
+</li>
+
+</ol>
+
+</div>
+
+
+
+<!-- =========================
+     ҚОРЫТЫНДЫ
+========================= -->
+
+<div class="card">
+
+<h2>6. Қорытынды</h2>
+
+<p>
+
+Ом заңы бойынша:
+
+<b>I = U/R</b>.
+
+Кедергі тұрақты болғанда ток күші
+кернеуге тура пропорционал.
+
+</p>
+
+<p>
+
+Кернеу тұрақты болғанда ток күші
+кедергіге кері пропорционал.
+
+</p>
+
+<p>
+
+Интерактивті модельде кернеу мен кедергіні
+өзгерту арқылы ток күшінің өзгерісін
+және токтың тізбек бойымен қозғалысын
+көрнекі түрде бақылауға болады.
+
+</p>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+
+/* =========================
+   НЕГІЗГІ ЭЛЕМЕНТТЕР
+========================= */
+
+const u =
+document.getElementById("u");
+
+const r =
+document.getElementById("r");
+
+
+const currentFlow =
+document.getElementById("currentFlow");
+
+
+/* Кілттің қозғалмалы бөлігі */
+
+const switchLever =
+document.getElementById("switchLever");
+
+
+/* Кілттің күйі */
+
+const switchState =
+document.getElementById("switchState");
+
+
+let currentRunning = true;
+
+
+
+/* =========================
+   UPDATE
+========================= */
+
+function update(){
+
+    const U =
+        parseFloat(u.value);
+
+    const R =
+        parseFloat(r.value);
+
+
+    /* Ом заңы */
+
+    const I =
+        U / R;
+
+
+
+    /* =====================
+       ЭКРАНДАҒЫ МӘНДЕР
+    ===================== */
+
+    document.getElementById("uText")
+        .textContent =
+        U.toFixed(1) + " В";
+
+
+    document.getElementById("rText")
+        .textContent =
+        R.toFixed(1) + " Ом";
+
+
+    document.getElementById("uRes")
+        .textContent =
+        U.toFixed(1) + " В";
+
+
+    document.getElementById("rRes")
+        .textContent =
+        R.toFixed(1) + " Ом";
+
+
+    document.getElementById("iRes")
+        .textContent =
+        I.toFixed(3) + " А";
+
+
+
+    /* =====================
+       СЫЗБАДАҒЫ МӘНДЕР
+    ===================== */
+
+    document.getElementById("batteryValue")
+        .textContent =
+        "U = " +
+        U.toFixed(1) +
+        " В";
+
+
+    document.getElementById("resistorValue")
+        .textContent =
+        R.toFixed(1) +
+        " Ом";
+
+
+    document.getElementById("currentValue")
+        .textContent =
+        "I = " +
+        I.toFixed(3) +
+        " А";
+
+
+
+    /* =====================
+       ТОКТЫҢ ҚОЗҒАЛЫСЫ
+    ===================== */
+
+    if(
+        currentRunning &&
+        I > 0
+    ){
+
+        currentFlow.style.opacity =
+            "1";
+
+        currentFlow.style.animationPlayState =
+            "running";
+
+
+        /*
+        Ток күші артқан сайын
+        қозғалыс жылдамдайды.
+        */
+
+        const speed =
+            Math.max(
+                0.12,
+                1.8 / I
+            );
+
+
+        currentFlow.style.animationDuration =
+            speed + "s";
+
+    }
+
+    else{
+
+        currentFlow.style.opacity =
+            "0";
+
+        currentFlow.style.animationPlayState =
+            "paused";
+
+    }
+
+
+
+    /* =====================
+       КІЛТТІҢ КҮЙІ
+    ===================== */
+
+    if(currentRunning){
+
+        /*
+        Кілт жабық.
+        Рычаг көлденең.
+        */
+
+        switchLever.setAttribute(
+            "x1",
+            "300"
+        );
+
+        switchLever.setAttribute(
+            "y1",
+            "150"
+        );
+
+        switchLever.setAttribute(
+            "x2",
+            "380"
+        );
+
+        switchLever.setAttribute(
+            "y2",
+            "150"
+        );
+
+
+        switchState.textContent =
+            "ЖАБЫҚ";
+
+        switchState.style.fill =
+            "#1769aa";
+
+    }
+
+    else{
+
+        /*
+        Кілт ашық.
+        Рычаг жоғары көтерілген.
+        */
+
+        switchLever.setAttribute(
+            "x1",
+            "300"
+        );
+
+        switchLever.setAttribute(
+            "y1",
+            "150"
+        );
+
+        switchLever.setAttribute(
+            "x2",
+            "350"
+        );
+
+        switchLever.setAttribute(
+            "y2",
+            "105"
+        );
+
+
+        switchState.textContent =
+            "АШЫҚ";
+
+        switchState.style.fill =
+            "#d62828";
+
+    }
+
+
+
+    /* График */
+
+    draw();
+
+}
+
+
+
+/* =========================
+   ТОКТЫ ТОҚТАТУ / ҚОСУ
+========================= */
+
+function toggleCurrent(){
+
+    currentRunning =
+        !currentRunning;
+
+
+    const button =
+        document.getElementById(
+            "currentButton"
+        );
+
+
+    if(currentRunning){
+
+        button.textContent =
+            "Токты тоқтату";
+
+    }
+
+    else{
+
+        button.textContent =
+            "Токты жүргізу";
+
+    }
+
+
+    update();
+
+}
+
+
+
+/* =========================
+   ГРАФИК
+========================= */
+
+function draw(){
+
+    const canvas =
+        document.getElementById("graph");
+
+    const ctx =
+        canvas.getContext("2d");
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /* Осьтер */
+
+    ctx.strokeStyle =
+        "#333";
+
+    ctx.lineWidth =
+        1;
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        60,
+        20
+    );
+
+    ctx.lineTo(
+        60,
+        320
+    );
+
+    ctx.lineTo(
+        920,
+        320
+    );
+
+    ctx.stroke();
+
+
+
+    /* Атаулар */
+
+    ctx.fillStyle =
+        "#172033";
+
+    ctx.font =
+        "15px Arial";
+
+
+    ctx.fillText(
+        "I, А",
+        20,
+        25
+    );
+
+
+    ctx.fillText(
+        "U, В",
+        890,
+        345
+    );
+
+
+
+    /* График I(U) */
+
+    const maxU =
+        24;
+
+    const maxI =
+        24;
+
+
+    ctx.strokeStyle =
+        "#1769aa";
+
+    ctx.lineWidth =
+        3;
+
+
+    ctx.beginPath();
+
+
+    for(
+        let x = 0;
+        x <= 24;
+        x += 0.25
+    ){
+
+        const resistance =
+            parseFloat(r.value);
+
+
+        const y =
+            x / resistance;
+
+
+        const px =
+            60 +
+            x / maxU *
+            850;
+
+
+        const py =
+            320 -
+            y / maxI *
+            280;
+
+
+        if(x === 0){
+
+            ctx.moveTo(
+                px,
+                py
+            );
+
+        }
+
+        else{
+
+            ctx.lineTo(
+                px,
+                py
+            );
+
+        }
+
+    }
+
+
+    ctx.stroke();
+
+
+
+    /* Қазіргі нүкте */
+
+    const U =
+        parseFloat(u.value);
+
+    const R =
+        parseFloat(r.value);
+
+    const I =
+        U / R;
+
+
+    const px =
+        60 +
+        U / maxU *
+        850;
+
+
+    const py =
+        320 -
+        I / maxI *
+        280;
+
+
+    ctx.fillStyle =
+        "#d33";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        px,
+        py,
+        7,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+
+    /* Графиктегі мәндер */
+
+    ctx.fillStyle =
+        "#555";
+
+    ctx.font =
+        "13px Arial";
+
+
+    for(
+        let k = 0;
+        k <= 24;
+        k += 4
+    ){
+
+        const x =
+            60 +
+            k / 24 *
+            850;
+
+
+        ctx.fillText(
+            k,
+            x - 5,
+            340
+        );
+
+    }
+
+}
+
+
+
+/* =========================
+   ҚАЛПЫНА КЕЛТІРУ
+========================= */
+
+function resetModel(){
+
+    u.value =
+        12;
+
+    r.value =
+        10;
+
+    currentRunning =
+        true;
+
+
+    document.getElementById(
+        "currentButton"
+    ).textContent =
+        "Токты тоқтату";
+
+
+    update();
+
+}
+
+
+
+/* =========================
+   SLIDER
+========================= */
+
+u.addEventListener(
+    "input",
+    update
+);
+
+
+r.addEventListener(
+    "input",
+    update
+);
+
+
+
+/* =========================
+   КЕСТЕ
+========================= */
+
+const vals = [
+    2,
+    4,
+    6,
+    8,
+    10,
+    12
+];
+
+
+document.getElementById(
+    "tableBody"
+).innerHTML =
+
+vals.map(
+    (x, i) => {
+
+        return `
+
+        <tr>
+
+            <td>
+                ${i + 1}
+            </td>
+
+            <td>
+                ${x}
+            </td>
+
+            <td>
+                10
+            </td>
+
+            <td>
+                ${(x / 10).toFixed(2)}
+            </td>
+
+        </tr>
+
+        `;
+
+    }
+).join("");
+
+
+
+/* =========================
+   ІСКЕ ҚОСУ
+========================= */
+
+update();
+
+</script>
+
+</body>
+</html>
